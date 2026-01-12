@@ -34,9 +34,10 @@ struct GameplayState
     bn::fixed leopard_offset;
     int anim_counter;
     int anim_frame;
+    bool facing_left;
     
     GameplayState() : current_scene(0), camera_x(0), lapin_x(50), 
-                      leopard_offset(150), anim_counter(0), anim_frame(0) {}
+                      leopard_offset(150), anim_counter(0), anim_frame(0), facing_left(false) {}
 };
 
 #endif

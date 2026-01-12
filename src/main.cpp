@@ -8,6 +8,7 @@
 #include "bn_music.h"
 #include "bn_sound_items.h"
 #include "bn_music_items.h"
+#include "bn_sprite_tiles_ptr.h"
 
 #include "common_variable_8x16_sprite_font.h"
 
@@ -17,6 +18,8 @@
 #include "bn_regular_bg_items_scene_02.h"
 #include "bn_regular_bg_items_scene_03.h"
 #include "bn_regular_bg_items_final_scene.h"
+#include "bn_sprite_items_bunny.h"
+#include "bn_sprite_items_cheetah.h"
 
 #include "game_state.h"
 #include "game_constants.h"
@@ -338,10 +341,16 @@ int main()
                     // Créer les sprites
                     bg = bn::regular_bg_items::scene_01.create_bg(0, 0);
                     bg->set_priority(3);
-                    lapin = bn::sprite_items::lapin.create_sprite(gameplay.lapin_x, Y_BOTTOM);
-                    leopard = bn::sprite_items::leopard.create_sprite(gameplay.lapin_x - gameplay.leopard_offset, Y_BOTTOM);
+                    lapin = bn::sprite_items::bunny.create_sprite(gameplay.lapin_x, Y_BOTTOM);
+                    leopard = bn::sprite_items::cheetah.create_sprite(gameplay.lapin_x - gameplay.leopard_offset, Y_BOTTOM);
+
                     lapin->set_z_order(0);
                     leopard->set_z_order(0);
+
+                    // Force la frame 0 au départ
+                    lapin->set_tiles(bn::sprite_items::bunny.tiles_item().create_tiles(0));
+                    leopard->set_tiles(bn::sprite_items::cheetah.tiles_item().create_tiles(0));
+
                 }
                 else if(next_state == GameState::INTRO) // Signal de quit
                 {

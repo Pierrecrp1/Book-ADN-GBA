@@ -28,10 +28,13 @@ constexpr bn::fixed SCROLL_THRESHOLD_LEFT = -96;
 // Positions initiales
 constexpr bn::fixed LAPIN_START_X = 50;
 constexpr bn::fixed LEOPARD_BASE_DISTANCE = 150;
-constexpr bn::fixed LEOPARD_MIN_DISTANCE = 40;
+constexpr bn::fixed LEOPARD_MIN_DISTANCE = 70;
 constexpr bn::fixed DISTANCE_STEP = (LEOPARD_BASE_DISTANCE - LEOPARD_MIN_DISTANCE) / (SCENES_COUNT - 1);
 
+constexpr bn::fixed LEOPARD_Y_OFFSET = 15;
+constexpr bn::fixed BUNNY_Y_OFFSET = 0;
+
 // Vitesse de déplacement
-constexpr bn::fixed MOVE_SPEED = 1;
+constexpr bn::fixed MOVE_SPEED = 1.5;
 
 #endif
