@@ -11,7 +11,7 @@
 class GameLogic
 {
 public:
-    // Gérer le mouvement et la logique du gameplay
+    // Manage movement and gameplay logic
     static GameState update_gameplay(
         GameplayState& gameplay,
         bn::optional<bn::sprite_ptr>& lapin,
@@ -23,13 +23,12 @@ public:
         bn::optional<bn::music_item>& current_music
     );
     
-private:
+    // Charger le background de la scène actuelle
     static void handle_scene_transition(
         GameplayState& gameplay,
         bn::optional<bn::regular_bg_ptr>& bg,
         VolumeSettings& volumes,
-        bn::optional<bn::music_item>& current_music,
-        bool forward
+        bn::optional<bn::music_item>& current_music
     );
 };
 

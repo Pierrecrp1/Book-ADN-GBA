@@ -81,7 +81,8 @@ pipinstall:
 	$(ASSETS_PYTHON) -m pip install $(PYTHON_REQUIREMENTS)
 
 # Script d'assets
-ASSETS_SCRIPT := generate_assets.py
+# ASSETS_SCRIPT := generate_assets.py
+ASSETS_SCRIPT := tools/make_backgrounds.py
 
 # Génération des assets
 assets:
@@ -92,5 +93,3 @@ ab: pipinstall assets all
 
 # Génération des assets + build + run
 abr: pipinstall assets all run
-
-

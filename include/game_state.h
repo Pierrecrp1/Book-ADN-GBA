@@ -3,7 +3,7 @@
 
 #include "bn_fixed.h"
 
-// États du jeu
+// Game states
 enum class GameState
 {
     INTRO,
@@ -14,7 +14,7 @@ enum class GameState
     OPTIONS
 };
 
-// Structure pour les volumes
+// Volume settings structure
 struct VolumeSettings
 {
     int music;
@@ -25,7 +25,7 @@ struct VolumeSettings
     VolumeSettings() : music(10), menu_sfx(10), game_music(10), game_sfx(10) {}
 };
 
-// Structure pour l'état du gameplay
+// Gameplay state structure
 struct GameplayState
 {
     int current_scene;
@@ -36,7 +36,7 @@ struct GameplayState
     int anim_frame;
     bool facing_left;
     
-    GameplayState() : current_scene(0), camera_x(0), lapin_x(50), 
+    GameplayState() : current_scene(0), camera_x(40), lapin_x(-100), 
                       leopard_offset(150), anim_counter(0), anim_frame(0), facing_left(false) {}
 };
 

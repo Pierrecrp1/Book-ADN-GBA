@@ -9,13 +9,13 @@
 class AudioManager
 {
 public:
-    // Démarrer une musique avec le volume approprié
+    // Start music with appropriate volume
     static void play_music(bn::music_item music, const VolumeSettings& volumes, bool is_game_music);
     
-    // Appliquer le volume à la musique en cours
+    // Apply volume to current music
     static void apply_volume(const bn::optional<bn::music_item>& current_music, const VolumeSettings& volumes);
     
-    // Jouer un effet sonore
+    // Play a sound effect
     static void play_sound(const bn::sound_item& sound, int volume);
 };
 

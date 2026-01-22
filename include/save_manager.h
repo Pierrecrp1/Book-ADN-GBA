@@ -3,7 +3,7 @@
 
 #include "game_state.h"
 
-// Structure pour sauvegarder les données dans la SRAM
+// Structure to save data in SRAM
 struct SaveData
 {
     int volume_music;
@@ -13,15 +13,15 @@ struct SaveData
     int magic_number;
 };
 
-constexpr int SAVE_MAGIC = 0x424F4F4B; // "BOOK" en hexadécimal
+constexpr int SAVE_MAGIC = 0x424F4F4B; // "BOOK" in hexadecimal
 
 class SaveManager
 {
 public:
-    // Charger les volumes depuis la SRAM
+    // Load volumes from SRAM
     static VolumeSettings load_volumes();
     
-    // Sauvegarder les volumes dans la SRAM
+    // Save volumes to SRAM
     static void save_volumes(const VolumeSettings& volumes);
 };
 

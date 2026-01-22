@@ -4,26 +4,27 @@
 #include "bn_fixed.h"
 
 // Configuration des scènes
-constexpr int SCENES_COUNT = 3;
+constexpr int SCENES_COUNT = 10;
 
 // Position Y des sprites
 constexpr bn::fixed Y_BOTTOM = 60;
 
-// Limites de scroll
-constexpr bn::fixed MAX_SCROLL_LEFT = 120;
-constexpr bn::fixed MAX_SCROLL_RIGHT = -120;
+// Limites de scroll (images 320x160)
+// Scroll max: 320 - 240 = 80px (40px on each side)
+constexpr bn::fixed MAX_SCROLL_LEFT = 40;
+constexpr bn::fixed MAX_SCROLL_RIGHT = -40;
 
-// Limites de l'écran
-constexpr bn::fixed SCREEN_EDGE_LEFT = -110;
-constexpr bn::fixed SCREEN_EDGE_RIGHT = 110;
+// Screen limits (adjusted for 320px width)
+constexpr bn::fixed SCREEN_EDGE_LEFT = -160;
+constexpr bn::fixed SCREEN_EDGE_RIGHT = 160;
 
-// Limites hors écran
-constexpr bn::fixed OFF_SCREEN_LEFT = -130;
-constexpr bn::fixed OFF_SCREEN_RIGHT = 130;
+// Off-screen limits (scene transition)
+constexpr bn::fixed OFF_SCREEN_LEFT = -170;
+constexpr bn::fixed OFF_SCREEN_RIGHT = 170;
 
-// Seuils de scroll
-constexpr bn::fixed SCROLL_THRESHOLD_RIGHT = 96;
-constexpr bn::fixed SCROLL_THRESHOLD_LEFT = -96;
+// Seuils de scroll (50% de SCREEN_EDGE pour transition fluide)
+constexpr bn::fixed SCROLL_THRESHOLD_RIGHT = 80;
+constexpr bn::fixed SCROLL_THRESHOLD_LEFT = -80;
 
 // Positions initiales
 constexpr bn::fixed LAPIN_START_X = 50;

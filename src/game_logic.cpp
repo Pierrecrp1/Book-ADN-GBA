@@ -4,6 +4,13 @@
 #include "bn_regular_bg_items_scene_01.h"
 #include "bn_regular_bg_items_scene_02.h"
 #include "bn_regular_bg_items_scene_03.h"
+#include "bn_regular_bg_items_scene_04.h"
+#include "bn_regular_bg_items_scene_05.h"
+#include "bn_regular_bg_items_scene_06.h"
+#include "bn_regular_bg_items_scene_07.h"
+#include "bn_regular_bg_items_scene_08.h"
+#include "bn_regular_bg_items_scene_09.h"
+#include "bn_regular_bg_items_scene_10.h"
 #include "bn_music_items.h"
 #include "bn_sound_items.h"
 #include "audio_manager.h"
@@ -12,39 +19,53 @@
 #include "bn_sprite_tiles_ptr.h"
 
 void GameLogic::handle_scene_transition(GameplayState& gameplay, bn::optional<bn::regular_bg_ptr>& bg,
-                                       VolumeSettings& volumes, bn::optional<bn::music_item>& current_music,
-                                       bool forward)
+                                       VolumeSettings& volumes, bn::optional<bn::music_item>& current_music)
 {
-    if(forward)
+    (void)volumes;
+    (void)current_music;
+    
+    // Free previous background
+    bg.reset();
+    
+    // Charge le background de la scène actuelle
+    switch(gameplay.current_scene)
     {
-        if(gameplay.current_scene == 1)
-        {
-            bg = bn::regular_bg_items::scene_02.create_bg(0, 0);
-            bg->set_priority(3);
-            current_music = bn::music_items::scene_02_music;
-            AudioManager::play_music(bn::music_items::scene_02_music, volumes, true);
-        }
-        else if(gameplay.current_scene == 2)
-        {
-            bg = bn::regular_bg_items::scene_03.create_bg(0, 0);
-            bg->set_priority(3);
-            current_music = bn::music_items::scene_03_music;
-            AudioManager::play_music(bn::music_items::scene_03_music, volumes, true);
-        }
-    }
-    else
-    {
-        if(gameplay.current_scene == 0)
-        {
+        case 0:
             bg = bn::regular_bg_items::scene_01.create_bg(0, 0);
-            bg->set_priority(3);
-        }
-        else if(gameplay.current_scene == 1)
-        {
+            break;
+        case 1:
             bg = bn::regular_bg_items::scene_02.create_bg(0, 0);
-            bg->set_priority(3);
-        }
+            break;
+        case 2:
+            bg = bn::regular_bg_items::scene_03.create_bg(0, 0);
+            break;
+        case 3:
+            bg = bn::regular_bg_items::scene_04.create_bg(0, 0);
+            break;
+        case 4:
+            bg = bn::regular_bg_items::scene_05.create_bg(0, 0);
+            break;
+        case 5:
+            bg = bn::regular_bg_items::scene_06.create_bg(0, 0);
+            break;
+        case 6:
+            bg = bn::regular_bg_items::scene_07.create_bg(0, 0);
+            break;
+        case 7:
+            bg = bn::regular_bg_items::scene_08.create_bg(0, 0);
+            break;
+        case 8:
+            bg = bn::regular_bg_items::scene_09.create_bg(0, 0);
+            break;
+        case 9:
+            bg = bn::regular_bg_items::scene_10.create_bg(0, 0);
+            break;
+        default:
+            break;
     }
+    
+    if(bg)
+        bg->set_priority(3);
 }
 
 GameState GameLogic::update_gameplay(GameplayState& gameplay, bn::optional<bn::sprite_ptr>& lapin,
@@ -80,8 +101,8 @@ GameState GameLogic::update_gameplay(GameplayState& gameplay, bn::optional<bn::s
             {
                 gameplay.current_scene++;
                 gameplay.camera_x = MAX_SCROLL_LEFT;
-                gameplay.lapin_x = SCREEN_EDGE_LEFT + 20;
-                handle_scene_transition(gameplay, bg, volumes, current_music, true);
+                gameplay.lapin_x = SCREEN_EDGE_LEFT + 100;
+                handle_scene_transition(gameplay, bg, volumes, current_music);
             }
         }
     }
@@ -115,7 +136,7 @@ GameState GameLogic::update_gameplay(GameplayState& gameplay, bn::optional<bn::s
                 gameplay.current_scene--;
                 gameplay.camera_x = MAX_SCROLL_RIGHT;
                 gameplay.lapin_x = SCREEN_EDGE_RIGHT - 20;
-                handle_scene_transition(gameplay, bg, volumes, current_music, false);
+                handle_scene_transition(gameplay, bg, volumes, current_music);
             }
         }
     }
@@ -124,7 +145,7 @@ GameState GameLogic::update_gameplay(GameplayState& gameplay, bn::optional<bn::s
     if(bg)
         bg->set_x(gameplay.camera_x);
 
-    // Calculer l'offset du cheetah/leopard
+    // Calculate cheetah/leopard offset
     gameplay.leopard_offset = LEOPARD_BASE_DISTANCE - (bn::fixed(gameplay.current_scene) * DISTANCE_STEP);
     bn::fixed leopard_x = gameplay.lapin_x - gameplay.leopard_offset;
 
@@ -157,7 +178,7 @@ GameState GameLogic::update_gameplay(GameplayState& gameplay, bn::optional<bn::s
                 lapin->set_tiles(bn::sprite_items::bunny.tiles_item().create_tiles(gameplay.anim_frame));
                 leopard->set_tiles(bn::sprite_items::cheetah.tiles_item().create_tiles(gameplay.anim_frame));
 
-                AudioManager::play_sound(bn::sound_items::animal_step, volumes.game_sfx);
+                // AudioManager::play_sound(bn::sound_items::animal_step, volumes.game_sfx);
             }
         }
         else

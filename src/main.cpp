@@ -12,11 +12,16 @@
 
 #include "common_variable_8x16_sprite_font.h"
 
-#include "bn_sprite_items_lapin.h"
-#include "bn_sprite_items_leopard.h"
 #include "bn_regular_bg_items_scene_01.h"
 #include "bn_regular_bg_items_scene_02.h"
 #include "bn_regular_bg_items_scene_03.h"
+#include "bn_regular_bg_items_scene_04.h"
+#include "bn_regular_bg_items_scene_05.h"
+#include "bn_regular_bg_items_scene_06.h"
+#include "bn_regular_bg_items_scene_07.h"
+#include "bn_regular_bg_items_scene_08.h"
+#include "bn_regular_bg_items_scene_09.h"
+#include "bn_regular_bg_items_scene_10.h"
 #include "bn_regular_bg_items_final_scene.h"
 #include "bn_sprite_items_bunny.h"
 #include "bn_sprite_items_cheetah.h"
@@ -28,7 +33,7 @@
 #include "menu_renderer.h"
 #include "game_logic.h"
 
-// Fonction pour gérer l'état INTRO
+// Function to handle INTRO state
 bool handle_intro_state(int& intro_counter, bn::vector<bn::sprite_ptr, 64>& text_sprites, 
                         bn::sprite_text_generator& text_generator)
 {
@@ -44,25 +49,33 @@ bool handle_intro_state(int& intro_counter, bn::vector<bn::sprite_ptr, 64>& text
     if(intro_counter > 180 || bn::keypad::a_pressed() || bn::keypad::start_pressed())
     {
         text_sprites.clear();
-        return true; // Passer au menu
+        return true; // Go to menu
     }
     
     return false;
 }
 
-// Fonction pour gérer l'état MENU
+// Function to handle MENU state
 GameState handle_menu_state(int& menu_selection, bn::vector<bn::sprite_ptr, 64>& text_sprites,
                             bn::sprite_text_generator& text_generator, VolumeSettings& volumes,
                             bn::optional<bn::music_item>& current_music, GameplayState& gameplay)
 {
-    // Démarrer la musique du menu
-    if(!current_music || current_music.value() != bn::music_items::menu_music)
+    // Start menu music
+    // if(!current_music || current_music.value() != bn::music_items::menu_music)
+    // {
+    //     current_music = bn::music_items::menu_music;
+    //     AudioManager::play_music(bn::music_items::menu_music, volumes, false);
+    // }
+
+    // Unique background music that loops throughout the ROM
+    // Only restart the music if it's not already playing
+    if(!bn::music::playing())
     {
-        current_music = bn::music_items::menu_music;
-        AudioManager::play_music(bn::music_items::menu_music, volumes, false);
+        current_music = bn::music_items::main_theme;
+        AudioManager::play_music(bn::music_items::main_theme, volumes, false);
     }
     
-    // Afficher le menu
+    // Display the menu
     if(text_sprites.empty())
     {
         const char* options[] = {"PLAY", "OPTIONS", "QUIT"};
@@ -93,7 +106,7 @@ GameState handle_menu_state(int& menu_selection, bn::vector<bn::sprite_ptr, 64>&
     // Bouton B pour quitter
     if(bn::keypad::b_pressed())
     {
-        return GameState::INTRO; // Signal pour quitter (géré dans main)
+        return GameState::INTRO; // Quit signal (handled in main)
     }
     
     // Sélection
@@ -104,7 +117,7 @@ GameState handle_menu_state(int& menu_selection, bn::vector<bn::sprite_ptr, 64>&
         
         if(menu_selection == 0) // PLAY
         {
-            // Réinitialiser le gameplay
+            // Reset gameplay
             gameplay = GameplayState();
             return GameState::PLAY;
         }
@@ -121,12 +134,12 @@ GameState handle_menu_state(int& menu_selection, bn::vector<bn::sprite_ptr, 64>&
     return GameState::MENU;
 }
 
-// Fonction pour gérer l'état PAUSE
+// Function to handle PAUSE state
 GameState handle_pause_state(int& pause_selection, bn::vector<bn::sprite_ptr, 64>& text_sprites,
                              bn::sprite_text_generator& text_generator, VolumeSettings& volumes,
                              GameState& previous_state)
 {
-    // Afficher le menu pause
+    // Display pause menu
     if(text_sprites.empty())
     {
         const char* options[] = {"RESUME", "OPTIONS", "BACK TO MENU"};
@@ -185,7 +198,7 @@ GameState handle_pause_state(int& pause_selection, bn::vector<bn::sprite_ptr, 64
     return GameState::PAUSE;
 }
 
-// Fonction pour ajuster un volume et redessiner le menu
+// Function to adjust volume and redraw the menu
 void adjust_volume_and_redraw(int& volume, int delta, int selection,
                               bn::vector<bn::sprite_ptr, 64>& text_sprites,
                               bn::sprite_text_generator& text_generator,
@@ -196,26 +209,26 @@ void adjust_volume_and_redraw(int& volume, int delta, int selection,
     if(volume < 0) volume = 0;
     if(volume > 10) volume = 10;
     
-    // Appliquer le volume en temps réel
+    // Apply volume in real time
     AudioManager::apply_volume(current_music, volumes);
     
-    // Sauvegarder
+    // Save
     SaveManager::save_volumes(volumes);
     
-    // Son feedback
+    // Sound feedback
     AudioManager::play_sound(bn::sound_items::menu_move, volumes.menu_sfx);
     
-    // Redessin immédiat
+    // Immediate redraw
     text_sprites.clear();
     MenuRenderer::render_options_menu(text_generator, text_sprites, volumes, selection);
 }
 
-// Fonction pour gérer l'état OPTIONS
+// Function to handle OPTIONS state
 GameState handle_options_state(int& options_selection, bn::vector<bn::sprite_ptr, 64>& text_sprites,
                                bn::sprite_text_generator& text_generator, VolumeSettings& volumes,
                                GameState& previous_state, bn::optional<bn::music_item>& current_music)
 {
-    // Afficher le menu options
+    // Display options menu
     if(text_sprites.empty())
     {
         MenuRenderer::render_options_menu(text_generator, text_sprites, volumes, options_selection);
@@ -229,23 +242,24 @@ GameState handle_options_state(int& options_selection, bn::vector<bn::sprite_ptr
         text_sprites.clear();
         MenuRenderer::render_options_menu(text_generator, text_sprites, volumes, options_selection);
     }
-    else if(bn::keypad::down_pressed() && options_selection < 4)
+    else if(bn::keypad::down_pressed() && options_selection < 3)
     {
         options_selection++;
         AudioManager::play_sound(bn::sound_items::menu_move, volumes.menu_sfx);
         text_sprites.clear();
         MenuRenderer::render_options_menu(text_generator, text_sprites, volumes, options_selection);
     }
-    // Ajuster les volumes LEFT/RIGHT
+    // Adjust volumes LEFT/RIGHT
     else if(bn::keypad::left_pressed())
     {
         if(options_selection == 0) adjust_volume_and_redraw(volumes.music, -1, options_selection, 
                                                             text_sprites, text_generator, volumes, current_music);
         else if(options_selection == 1) adjust_volume_and_redraw(volumes.menu_sfx, -1, options_selection,
                                                                  text_sprites, text_generator, volumes, current_music);
-        else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_music, -1, options_selection,
-                                                                 text_sprites, text_generator, volumes, current_music);
-        else if(options_selection == 3) adjust_volume_and_redraw(volumes.game_sfx, -1, options_selection,
+        // Game Music commented out - uses the same music as Menu Music
+        // else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_music, -1, options_selection,
+        //                                                          text_sprites, text_generator, volumes, current_music);
+        else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_sfx, -1, options_selection,
                                                                  text_sprites, text_generator, volumes, current_music);
     }
     else if(bn::keypad::right_pressed())
@@ -254,14 +268,15 @@ GameState handle_options_state(int& options_selection, bn::vector<bn::sprite_ptr
                                                             text_sprites, text_generator, volumes, current_music);
         else if(options_selection == 1) adjust_volume_and_redraw(volumes.menu_sfx, 1, options_selection,
                                                                  text_sprites, text_generator, volumes, current_music);
-        else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_music, 1, options_selection,
-                                                                 text_sprites, text_generator, volumes, current_music);
-        else if(options_selection == 3) adjust_volume_and_redraw(volumes.game_sfx, 1, options_selection,
+        // Game Music commented out - uses the same music as Menu Music
+        // else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_music, 1, options_selection,
+        //                                                          text_sprites, text_generator, volumes, current_music);
+        else if(options_selection == 2) adjust_volume_and_redraw(volumes.game_sfx, 1, options_selection,
                                                                  text_sprites, text_generator, volumes, current_music);
     }
     
-    // Retour avec A ou B
-    if((bn::keypad::a_pressed() && options_selection == 4) || bn::keypad::b_pressed())
+    // Return with A or B
+    if((bn::keypad::a_pressed() && options_selection == 3) || bn::keypad::b_pressed())
     {
         AudioManager::play_sound(bn::sound_items::menu_select, volumes.menu_sfx);
         text_sprites.clear();
@@ -284,7 +299,7 @@ int main()
 {
     bn::core::init();
     
-    // Variables d'état
+    // State variables
     GameState state = GameState::INTRO;
     GameState previous_state = GameState::INTRO;
     int intro_counter = 0;
@@ -292,21 +307,21 @@ int main()
     int pause_selection = 0;
     int options_selection = 0;
     
-    // Charger les volumes
+    // Load volumes
     VolumeSettings volumes = SaveManager::load_volumes();
     
-    // Musique actuelle
+    // Current music
     bn::optional<bn::music_item> current_music;
     
-    // État du gameplay
+    // Gameplay state
     GameplayState gameplay;
     
-    // Sprites et backgrounds
+    // Sprites and backgrounds
     bn::optional<bn::sprite_ptr> lapin;
     bn::optional<bn::sprite_ptr> leopard;
     bn::optional<bn::regular_bg_ptr> bg;
     
-    // Générateur de texte
+    // Text generator
     bn::sprite_text_generator text_generator(common::variable_8x16_sprite_font);
     text_generator.set_center_alignment();
     bn::vector<bn::sprite_ptr, 64> text_sprites;
@@ -334,25 +349,35 @@ int main()
                 
                 if(next_state == GameState::PLAY)
                 {
-                    // Démarrer la musique de jeu
-                    current_music = bn::music_items::scene_01_music;
-                    AudioManager::play_music(bn::music_items::scene_01_music, volumes, true);
+                    // Start game music
+                    // current_music = bn::music_items::scene_01_music;
+                    // AudioManager::play_music(bn::music_items::scene_01_music, volumes, true);
                     
-                    // Créer les sprites
-                    bg = bn::regular_bg_items::scene_01.create_bg(0, 0);
-                    bg->set_priority(3);
+                    // Music already playing from menu, no need to restart it
+                    // if(!bn::music::playing())
+                    // {
+                    //     current_music = bn::music_items::main_theme;
+                    //     AudioManager::play_music(bn::music_items::main_theme, volumes, true);
+                    // }
+                    
+                    // Reset gameplay to start from the left
+                    gameplay = GameplayState();
+                    
+                    // Create background for scene 01
+                    GameLogic::handle_scene_transition(gameplay, bg, volumes, current_music);
+                    
                     lapin = bn::sprite_items::bunny.create_sprite(gameplay.lapin_x, Y_BOTTOM);
                     leopard = bn::sprite_items::cheetah.create_sprite(gameplay.lapin_x - gameplay.leopard_offset, Y_BOTTOM);
 
                     lapin->set_z_order(0);
                     leopard->set_z_order(0);
 
-                    // Force la frame 0 au départ
+                    // Force frame 0 at start
                     lapin->set_tiles(bn::sprite_items::bunny.tiles_item().create_tiles(0));
                     leopard->set_tiles(bn::sprite_items::cheetah.tiles_item().create_tiles(0));
 
                 }
-                else if(next_state == GameState::INTRO) // Signal de quit
+                else if(next_state == GameState::INTRO) // Quit signal
                 {
                     return 0;
                 }
@@ -363,7 +388,7 @@ int main()
             
             case GameState::PLAY:
             {
-                // Vérifier START pour pause
+                // Check START for pause
                 if(bn::keypad::start_pressed())
                 {
                     previous_state = GameState::PLAY;
@@ -373,7 +398,7 @@ int main()
                     break;
                 }
                 
-                // Mettre à jour le gameplay
+                // Update gameplay
                 GameState next_state = GameLogic::update_gameplay(gameplay, lapin, leopard, bg,
                                                                   moving_right, moving_left, volumes,
                                                                   current_music);
@@ -394,7 +419,7 @@ int main()
                 
                 if(state == GameState::MENU)
                 {
-                    // Détruire les ressources
+                    // Destroy resources
                     lapin.reset();
                     leopard.reset();
                     bg.reset();
@@ -408,18 +433,25 @@ int main()
             {
                 if(text_sprites.empty())
                 {
-                    // Musique de fin
-                    current_music = bn::music_items::final_music;
-                    AudioManager::play_music(bn::music_items::final_music, volumes, true);
+                    // End music
+                    // current_music = bn::music_items::final_music;
+                    // AudioManager::play_music(bn::music_items::final_music, volumes, true);
+
+                    // Music already playing, no need to restart it
+                    // if(!bn::music::playing())
+                    // {
+                    //     current_music = bn::music_items::main_theme;
+                    //     AudioManager::play_music(bn::music_items::main_theme, volumes, true);
+                    // }
                     
-                    // Background de fin
+                    // End background
                     bg = bn::regular_bg_items::final_scene.create_bg(0, 0);
                     bg->set_priority(3);
                     
-                    // Détruire le lapin
+                    // Destroy bunny
                     lapin.reset();
                     
-                    // Positionner le léopard
+                    // Position leopard
                     if(leopard)
                     {
                         leopard->set_position(0, 0);
@@ -427,10 +459,10 @@ int main()
                         leopard->set_rotation_angle(0);
                     }
                     
-                    // Texte
+                    // Text
                     text_generator.generate(0, -60, "THE END", text_sprites);
-                    text_generator.generate(0, -40, "Le leopard a attrape", text_sprites);
-                    text_generator.generate(0, -25, "le lapin!", text_sprites);
+                    text_generator.generate(0, -40, "The leopard caught", text_sprites);
+                    text_generator.generate(0, -25, "the bunny!", text_sprites);
                     text_generator.generate(0, 45, "Press A to return", text_sprites);
                     text_generator.generate(0, 60, "to menu", text_sprites);
                 }

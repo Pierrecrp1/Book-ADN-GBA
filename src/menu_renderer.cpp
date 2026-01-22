@@ -15,7 +15,7 @@ void MenuRenderer::render_simple_menu(
     // Titre
     text_gen.generate(0, title_y, title, text_sprites);
     
-    // Options avec curseur
+    // Options with cursor
     for(int i = 0; i < option_count; i++)
     {
         bn::string<32> option_text;
@@ -47,8 +47,8 @@ void MenuRenderer::render_options_menu(
     
     // Menu Music
     bn::string<32> music_text;
-    if(selection == 0) music_text = "> Menu Music: ";
-    else music_text = "  Menu Music: ";
+    if(selection == 0) music_text = "> Music: ";
+    else music_text = "  Music: ";
     music_text += bn::to_string<4>(volumes.music);
     text_gen.generate(0, -40, music_text, text_sprites);
     
@@ -59,22 +59,22 @@ void MenuRenderer::render_options_menu(
     menu_sfx_text += bn::to_string<4>(volumes.menu_sfx);
     text_gen.generate(0, -20, menu_sfx_text, text_sprites);
     
-    // Game Music
-    bn::string<32> game_music_text;
-    if(selection == 2) game_music_text = "> Game Music: ";
-    else game_music_text = "  Game Music: ";
-    game_music_text += bn::to_string<4>(volumes.game_music);
-    text_gen.generate(0, 0, game_music_text, text_sprites);
+    // Game Music (commented out - uses the same music as Menu Music)
+    // bn::string<32> game_music_text;
+    // if(selection == 2) game_music_text = "> Game Music: ";
+    // else game_music_text = "  Game Music: ";
+    // game_music_text += bn::to_string<4>(volumes.game_music);
+    // text_gen.generate(0, 0, game_music_text, text_sprites);
     
     // Game SFX
     bn::string<32> game_sfx_text;
-    if(selection == 3) game_sfx_text = "> Game SFX: ";
+    if(selection == 2) game_sfx_text = "> Game SFX: ";
     else game_sfx_text = "  Game SFX: ";
     game_sfx_text += bn::to_string<4>(volumes.game_sfx);
-    text_gen.generate(0, 20, game_sfx_text, text_sprites);
+    text_gen.generate(0, 0, game_sfx_text, text_sprites);
     
     // BACK
-    if(selection == 4) text_gen.generate(0, 40, "> BACK", text_sprites);
+    if(selection == 3) text_gen.generate(0, 40, "> BACK", text_sprites);
     else text_gen.generate(0, 40, "  BACK", text_sprites);
     
     // Instructions
